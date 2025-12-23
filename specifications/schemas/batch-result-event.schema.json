@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://flash-cache.internal/schemas/batch-result-event.schema.json",
+  "title": "Batch Result Event",
+  "type": "object",
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "bucket": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bucket",
+        "file"
+      ]
+    },
+    "record": {
+      "type": "object",
+      "description": "The raw record from the batch result file",
+      "properties": {
+        "processed_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "response": {
+          "type": "object",
+          "properties": {
+            "candidates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "object",
+                    "properties": {
+                      "parts": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "description": "The JSON string containing the security analysis result"
+                            }
+                          },
+                          "required": [
+                            "text"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "parts"
+                    ]
+                  }
+                },
+                "required": [
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the prediction"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "contents": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "parts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "role": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "system_instruction": {
+              "type": "object",
+              "properties": {
+                "parts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "eventId",
+    "timestamp",
+    "source",
+    "record"
+  ]
+}

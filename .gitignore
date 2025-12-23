@@ -1,0 +1,43 @@
+# Binaries
+main
+gcs-log-ingestor
+dataset-loader
+bin/
+/ingestor
+features.test
+wire_gen.go
+# Generated schemas
+internal/platform/schema/*_gen.go
+*.exe
+*.out
+
+# Key/Auth files
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!specifications/**/*.json
+!specs/**/*.json
+*.pem
+
+# Logs
+*.log
+*.csv
+
+# OS
+.DS_Store
+.buckets
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+**.terraform/
+**/node_modules/
+**/dist/
+/vendor/
+.envinternal/app/ingestor/server/server.gen.go
+.env
+*_gen.go
+*.tfvars

@@ -1,0 +1,48 @@
+description = "Pull all GitHub issues, prioritize them, identify relevant files, and generate a COMMENTS.md report with fix suggestions."
+
+prompt = """
+---
+description: Pull all GitHub issues and write out a file called 'COMMENTS.md' with a separation of high-medium-low. Identify the specific files that need to be updated, and provide a suggestion on how to fix them and also whether to fix them.
+tools: ['run_command', 'write_to_file']
+---
+
+## User Input
+
+```text
+$ARGUMENTS
+```
+
+## Outline
+
+1.  Fetch all open GitHub issues using the `gh` CLI. You should request JSON output to easily parse the data.
+    ```bash
+    gh issue list --state open --limit 100 --json number,title,body,labels,url
+    ```
+2.  Analyze each issue to determine its priority (High, Medium, Low). Use the labels if available and relevant (e.g., "critical", "bug", "enhancement"), otherwise infer from the title and body.
+3.  For each issue, identify the specific files in the codebase that likely need to be updated. You may need to search the codebase if the issue description is vague, but primarily rely on the issue content.
+4.  Generate a file named `COMMENTS.md` in the current directory.
+5.  Structure `COMMENTS.md` exactly as follows:
+
+    ```markdown
+    # PR Review / Issue Analysis
+
+    ## High Priority
+    ### [Issue Title] (#IssueNumber)
+    - **Link**: [Issue URL]
+    - **Summary**: Brief summary of the issue.
+    - **Affected Files**:
+        - `path/to/file1.go`
+        - `path/to/file2.go`
+    - **Suggestion**: Detailed suggestion on how to fix it.
+    - **Action**: Recommendation on whether to fix it now or later.
+
+    ## Medium Priority
+    ... (same format)
+
+    ## Low Priority
+    ... (same format)
+    ```
+
+6.  Ensure that YOU DO NOT apply the fixes. Your task is ONLY to generate the `COMMENTS.md` file.
+7.  If you cannot find specific files for an issue, note that in the "Affected Files" section (e.g., "Unknown - requires further investigation").
+"""

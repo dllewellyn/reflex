@@ -1,0 +1,19 @@
+type: object
+properties:
+  dataset_id:
+    type: string
+    description: "HuggingFace dataset ID (e.g., deepset/prompt-injections)"
+  split:
+    type: string
+    description: "Dataset split to ingest (default: train)"
+  text_column:
+    type: string
+    description: "Column name for text content (default: text)"
+  label_column:
+    type: string
+    description: "Column name for label (default: label)"
+  batch_size:
+    type: integer
+    description: "Number of records to process in a batch (default: 100)"
+required:
+  - dataset_id

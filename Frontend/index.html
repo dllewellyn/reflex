@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflex - AI Security Monitoring</title>
+    <meta name="description" content="Cloud-native security monitoring platform for AI conversation data using LLM-as-a-Judge analysis.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-shield-halved"></i> Reflex
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#contact" class="btn-primary">Get Access</a></li>
+            </ul>
+            <div class="mobile-menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="badge">
+                    <span class="pulse"></span> v1.0 Live
+                </div>
+                <h1>Secure Your AI <br> <span class="gradient-text">Conversations</span></h1>
+                <p>Real-time prompt injection detection and security analysis for LLMs using Google Vertex AI. Protect your models, protect your data.</p>
+                <div class="cta-group">
+                    <a href="#contact" class="btn-primary">Deploy Now <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="https://github.com/dllewellyn/reflex" class="btn-secondary" target="_blank"><i class="fa-brands fa-github"></i> View on GitHub</a>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">Detection Rate</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">< 50ms</span>
+                        <span class="stat-label">Latency</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Monitoring</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="glass-card terminal-card">
+                    <div class="terminal-header">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                        <span class="terminal-title">ingestor-service</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="code-line"><span class="cmd">></span> ingestor start --port=8080</div>
+                        <div class="code-line info">[INFO] Service started on :8080</div>
+                        <div class="code-line info">[INFO] Kafka producer connected</div>
+                        <div class="code-line success">[SUCCESS] Threat detected: "Drop table users"</div>
+                        <div class="code-line warning">[WARN] Prompt Injection prevented</div>
+                        <div class="code-line info">[INFO] Analysis complete. Score: 0.98</div>
+                    </div>
+                </div>
+                <!-- Abstract visual elements -->
+                <div class="floating-shield">
+                    <i class="fa-solid fa-shield-virus"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Defense in Depth</h2>
+                <p>Comprehensive security layer designed for the modern AI stack.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3>Real-time Ingestion</h3>
+                    <p>High-throughput Go-based ingestion service that captures every interaction instantly via REST API and publishes to Kafka.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    </div>
+                    <h3>LLM-as-a-Judge</h3>
+                    <p>Powered by Gemini 2.5 Flash on Vertex AI to evaluate conversations with human-like understanding of context and intent.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-box-archive"></i>
+                    </div>
+                    <h3>Scheduled Archival</h3>
+                    <p>Automatic hourly archival of raw data to Google Cloud Storage ensures you never lose a single byte of conversation history.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <h3>Vector Search</h3>
+                    <p>Integrated with Pinecone to store and search through conversation embeddings for pattern matching and threat hunting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="architecture">
+        <div class="container">
+            <div class="architecture-layout">
+                <div class="arch-text">
+                    <h2>Cloud-Native Architecture</h2>
+                    <ul class="arch-list">
+                        <li>
+                            <i class="fa-brands fa-golang"></i>
+                            <div>
+                                <strong>Go Microservices</strong>
+                                <span>Built for speed and concurrency.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-brands fa-google"></i>
+                            <div>
+                                <strong>Vertex AI & GCS</strong>
+                                <span>Scale infinitely with Google Cloud.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-server"></i>
+                            <div>
+                                <strong>Apache Kafka</strong>
+                                <span>Reliable event streaming backbone.</span>
+                            </div>
+                        </li>
+                         <li>
+                            <i class="fa-solid fa-layer-group"></i>
+                            <div>
+                                <strong>Pinecone</strong>
+                                <span>Vector database for similarity search.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="arch-visual">
+                    <div class="glass-card arch-diagram">
+                        <!-- CSS Representation of Architecture -->
+                        <div class="flow-step" style="top: 10%; left: 10%;">REST API</div>
+                        <div class="flow-arrow" style="top: 15%; left: 30%;">➜</div>
+                        <div class="flow-step" style="top: 10%; left: 40%;">Kafka</div>
+                        <div class="flow-arrow" style="top: 15%; left: 60%;">➜</div>
+                        <div class="flow-step" style="top: 10%; left: 70%;">Loader</div>
+                        
+                        <div class="flow-arrow-down" style="top: 25%; left: 75%;">⬇</div>
+                        
+                        <div class="flow-step" style="top: 40%; left: 70%;">GCS</div>
+                        <div class="flow-arrow-down" style="top: 55%; left: 75%;">⬇</div>
+                        <div class="flow-step" style="top: 70%; left: 70%;">Batch Job</div>
+                        
+                        <div class="flow-arrow-left" style="top: 75%; left: 60%;">⬅</div>
+                        <div class="flow-step" style="top: 70%; left: 40%;">Vertex AI</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container footer-content">
+            <div class="footer-col">
+                <h3>Reflex</h3>
+                <p>Protecting the future of AI interactions.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#">Documentation</a>
+                <a href="#">GitHub</a>
+                <a href="#">API Reference</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 Reflex. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

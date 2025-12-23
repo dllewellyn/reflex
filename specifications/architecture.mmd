@@ -1,0 +1,45 @@
+```mermaid
+graph TD
+    User["User / Application"] -->|POST /ingest| Ingestor["Ingestor Service (Go)"]
+    
+    subgraph "Confluent Cloud"
+        Ingestor -->|Produce| RawTopic["Topic: raw-interactions"]
+        BatchResTopic["Topic: batch-job-results"]
+    end
+    
+    subgraph "Google Cloud Platform"
+        SchedulerHourly["Cloud Scheduler (Hourly)"] -->|Trigger| LoaderJob["Loader Job (Go)"]
+        LoaderJob -->|Consume| RawTopic
+        LoaderJob -->|Write JSONL Chunk| GCSRaw["GCS: raw/YYYY/MM/DD/HH/"]
+        
+        SchedulerDaily["Cloud Scheduler (Daily)"] -->|Trigger| BatchJob["Batch Analyzer (Go)"]
+        BatchJob -->|Read Raw Chunks| GCSRaw
+        BatchJob -- Group Conversations --> GCSStaging["GCS: staging/YYYY-MM-DD/"]
+        
+        BatchJob -->|Submit Job| VertexAI["Vertex AI Batch Prediction"]
+        
+        subgraph "Evaluation"
+            VertexAI -- Gemini Flash 2.5 --> Judge["LLM as a Judge"]
+        end
+        
+        VertexAI -->|Output Results| GCSResults["GCS: results/YYYY-MM-DD/"]
+        
+        GCSResults -->|On Finalize| TriggerFn["Batch Trigger (Cloud Function)"]
+        TriggerFn -->|Produce| BatchResTopic
+        
+        ExtractJob["Extract Injections (Cloud Run Job)"] -->|Consume| BatchResTopic
+        ExtractJob -->|Upsert| Pinecone["Pinecone Vector DB"]
+    end
+    
+    ExtractJob -->|Push Alerts| AlertsTopic["Topic: security-alerts"]
+    
+    classDef cloud fill:#e1f5fe,stroke:#333,stroke-width:2px;
+    classDef confluent fill:#fff3e0,stroke:#f57f17,stroke-width:2px;
+    classDef go fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef db fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    
+    class Ingestor,LoaderJob,BatchJob,TriggerFn,ExtractJob go;
+    class RawTopic,AlertsTopic,BatchResTopic confluent;
+    class GCSRaw,GCSStaging,GCSResults,VertexAI,SchedulerHourly,SchedulerDaily cloud;
+    class Pinecone db;
+```

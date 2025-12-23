@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security Alert",
+  "description": "High-risk security finding pushed to Kafka",
+  "type": "object",
+  "properties": {
+    "alert_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the alert"
+    },
+    "conversation_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The ID of the conversation where the threat was detected"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the alert was generated"
+    },
+    "finding": {
+      "type": "object",
+      "properties": {
+        "injection_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "The probability of prompt injection"
+        },
+        "deviation_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "The probability of deviation from guidelines"
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "Explanation of why this was flagged as a threat"
+        }
+      },
+      "required": ["injection_score", "reasoning"]
+    }
+  },
+  "required": [
+    "alert_id",
+    "conversation_id",
+    "timestamp",
+    "finding"
+  ]
+}

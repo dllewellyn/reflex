@@ -1,0 +1,14 @@
+.git
+.gitignore
+.dockerignore
+bin/
+terraform/
+.terraform/
+specs/
+tests/
+features/
+.gemini/
+.idx/
+README.md
+SETUP.md
+PLAN.md

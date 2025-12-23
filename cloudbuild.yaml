@@ -1,0 +1,114 @@
+steps:
+  # 1. Build Loader Image
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-loader
+    waitFor: ['-']
+    args:
+      - "build"
+      - "-t"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/loader:latest"
+      - "-f"
+      - "build/Dockerfile.loader"
+      - "."
+
+  # 2. Build Batch Job Image
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-batch
+    waitFor: ['-']
+    args:
+      - "build"
+      - "-t"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/batch-job:latest"
+      - "-f"
+      - "build/Dockerfile.batch-job"
+      - "."
+
+  # 3. Push Loader Image
+  - name: "gcr.io/cloud-builders/docker"
+    id: push-loader
+    waitFor: ['build-loader']
+    args:
+      [
+        "push",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/loader:latest",
+      ]
+
+  # - name: "gcr.io/cloud-builders/docker"
+  #   id: push-batch
+  #   waitFor: ['build-batch']
+  #   args:
+  #     [
+  #       "push",
+  #       "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/batch-job:latest",
+  #     ]
+
+  # 4. Build Ingestor Image
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-ingestor
+    waitFor: ['-']
+    args:
+      - "build"
+      - "-t"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ingestor:latest"
+      - "-f"
+      - "cmd/ingestor/Dockerfile"
+      - "."
+
+  # 5. Push Ingestor Image
+  - name: "gcr.io/cloud-builders/docker"
+    id: push-ingestor
+    waitFor: ['build-ingestor']
+    args:
+      [
+        "push",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ingestor:latest",
+      ]
+
+  # 6. Deploy Ingestor
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: deploy-ingestor
+    waitFor: ['push-ingestor']
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "ingestor"
+      - "--image"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ingestor:latest"
+      - "--region"
+      - "${_LOCATION}"
+
+  # 7. Build Extract Injections Image
+  - name: "gcr.io/cloud-builders/docker"
+    id: build-extract
+    waitFor: ['-']
+    args:
+      - "build"
+      - "-t"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/extract-injections:latest"
+      - "-f"
+      - "build/Dockerfile.extract-injections"
+      - "."
+
+  # 8. Push Extract Injections Image
+  - name: "gcr.io/cloud-builders/docker"
+    id: push-extract
+    waitFor: ['build-extract']
+    args:
+      [
+        "push",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/extract-injections:latest",
+      ]
+
+images:
+  - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/loader:latest"
+  - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/batch-job:latest"
+  - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/ingestor:latest"
+  - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/extract-injections:latest"
+
+substitutions:
+  _LOCATION: us-central1
+  _REPOSITORY: flash-cache-repo
+
+options:
+  logging: CLOUD_LOGGING_ONLY

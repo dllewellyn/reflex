@@ -1,0 +1,10 @@
+FROM golang:1.24 as builder
+WORKDIR /app
+COPY . .
+RUN chmod +x ./scripts/generate_schemas.sh && ./scripts/generate_schemas.sh
+RUN go build -o batch-job ./cmd/batch-job
+
+FROM gcr.io/distroless/cc-debian12:nonroot
+COPY --from=builder /app/batch-job /
+COPY prompts/ /prompts/
+CMD ["/batch-job"]

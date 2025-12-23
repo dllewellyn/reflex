@@ -1,0 +1,27 @@
+  /analyze:
+    post:
+      summary: Submit interaction for asynchronous security analysis
+      operationId: AnalyzeInteraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Interaction"
+      responses:
+        "202":
+          description: Accepted for analysis
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: accepted
+                  interaction_id:
+                    type: string
+        "400":
+          description: Invalid Request (Schema Violation)
+        "500":
+          description: Internal Server Error (Kafka Unavailable)

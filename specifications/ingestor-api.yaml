@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: Ingestor API
+  version: 1.0.0
+  description: API for ingesting LLM interactions
+servers:
+  - url: http://localhost:8080
+  - url: https://ingestor-139684604130.us-central1.run.app
+paths:
+  /analyze:
+    post:
+      summary: Submit interaction for asynchronous security analysis
+      operationId: AnalyzeInteraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeRequest"
+      responses:
+        "200":
+          description: Analysis Result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyzeResponse"
+        "400":
+          description: Invalid Request (Schema Violation)
+        "500":
+          description: Internal Server Error
+
+components:
+  schemas:
+    AnalyzeRequest:
+      type: object
+      required:
+        - interaction_id
+        - conversation_id
+        - prompt
+      properties:
+        interaction_id:
+          type: string
+        conversation_id:
+          type: string
+        prompt:
+          type: string
+        user:
+          $ref: "#/components/schemas/UserMetadata"
+
+    AnalyzeResponse:
+      type: object
+      required:
+        - interaction_id
+        - score
+        - is_prompt_injection
+      properties:
+        interaction_id:
+          type: string
+        score:
+          type: number
+          format: float
+        is_prompt_injection:
+          type: boolean
+
+    UserMetadata:
+      type: object
+      properties:
+        user_id:
+          type: string
+        source_ip:
+          type: string
+        user_agent:
+          type: string

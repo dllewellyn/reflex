@@ -1,0 +1,14 @@
+.git/
+.gitignore
+.env
+*.exe
+*.out
+*.test
+vendor/
+node_modules/
+dist/
+build/
+*.log
+coverage/
+.vscode/
+.idea/

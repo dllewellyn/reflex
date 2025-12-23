@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  go-ci:
+    name: Go CI
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_PUBSUB_SA_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Install tools
+        run: make tools
+
+      - name: Generate code
+        run: make generate-go
+
+      - name: Check formatting
+        run: make fmt-check
+
+      - name: Lint Go
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: --timeout=5m
+
+      - name: Test Go
+        run: make test-go
+        env:
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+          GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
+          PUBSUB_SUBSCRIPTION: ${{ secrets.PUBSUB_SUBSCRIPTION }}
+          KAFKA_BOOTSTRAP_SERVERS: ${{ secrets.KAFKA_BOOTSTRAP_SERVERS }}
+          KAFKA_API_KEY: ${{ secrets.KAFKA_API_KEY }}
+          KAFKA_API_SECRET: ${{ secrets.KAFKA_API_SECRET }}
+          KAFKA_TOPIC: ${{ secrets.KAFKA_TOPIC }}
+
+      - name: Test Integration
+        run: go test -tags integration -v ./features/...
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_PUBSUB_SA_KEY }}
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+          GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
+          PUBSUB_SUBSCRIPTION: ${{ secrets.PUBSUB_SUBSCRIPTION }}
+          KAFKA_BOOTSTRAP_SERVERS: ${{ secrets.KAFKA_BOOTSTRAP_SERVERS }}
+          KAFKA_API_KEY: ${{ secrets.KAFKA_API_KEY }}
+          KAFKA_API_SECRET: ${{ secrets.KAFKA_API_SECRET }}
+          KAFKA_TOPIC: ${{ secrets.KAFKA_TOPIC }}
+
+      - name: Build Go Binaries
+        run: make build-go
+
+  tf-ci:
+    name: Terraform CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        run: make validate-tf
